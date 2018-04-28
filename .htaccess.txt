@@ -1,0 +1,26 @@
+RewriteEngine On
+
+# Assuming you're running at domain root.  Change to working directory if needed.
+RewriteBase /
+
+ # www check
+# If you're running in a subdirectory, then you'll need to add that in
+# to the redirected url (http://www.mydomain.com/subdirectory/$1
+
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteRule ^(.*)$ http://www.mydomain.com/$1 [R=301,L]
+
+#
+# Trailing slash check
+
+# Don't fix direct file links
+RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteCond %{REQUEST_URI} !(.*)/$
+RewriteRule ^(.*)$ $1/ [L,R=301]
+
+
+# Finally, forward everything to your front-controller (index.php)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule .* index.php [QSA,L]
